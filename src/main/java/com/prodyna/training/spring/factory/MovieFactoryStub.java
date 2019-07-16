@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MovieFactoryStub implements MovieFactory{
 
+  @Autowired
   private MoviesConfiguration moviesConfiguration;
 
   public MovieFactoryStub(@Autowired MoviesConfiguration moviesConfiguration){
