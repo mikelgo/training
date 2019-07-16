@@ -1,8 +1,7 @@
-package com.prodyna.training.injection.assisted;
+package com.prodyna.training.examples.di;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-//@Component
 public class Service {
 
     private Dao dao;
