@@ -1,5 +1,26 @@
 package com.prodyna.training.mapstruct.test;
 
-public class CustomerOrderDto {
+
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@EqualsAndHashCode
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductDto implements Serializable {
+
+  private int id;
+
+  private String description;
+
+  private boolean onSale;
 
 }
