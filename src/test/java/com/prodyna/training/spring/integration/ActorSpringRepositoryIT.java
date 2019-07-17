@@ -39,6 +39,11 @@ public class ActorSpringRepositoryIT {
   @Test
   public void findByNameShouldReturnASingleActor() {
 
+    List<Actor> actorList = actorRepository.findByName("Keanu Reeves");
+
+    assertThat(actorList.size(), is(equalTo(1)));
+    assertThat(actorList.get(0).getId(), is(equalTo(1L)));
+    assertThat(actorList.get(0).getName(), is(equalTo("Keanu Reeves")));
 
   }
 
@@ -48,6 +53,9 @@ public class ActorSpringRepositoryIT {
   @Test
   public void findByCarBrandShouldReturnOwningActors() {
 
+    List<Actor> actorList = actorRepository.findByCar_Brand("Audi");
+
+    assertThat(actorList.size(), is(equalTo(3)));
 
   }
 
@@ -57,6 +65,9 @@ public class ActorSpringRepositoryIT {
   @Test
   public void findByAddressPostalCodeShouldReturnRelatedActors() {
 
+    List<Actor> actorList = actorRepository.findByAddress_PostalCode(56767);
+
+    assertThat(actorList.size(), is(equalTo(2)));
 
   }
 
@@ -66,7 +77,11 @@ public class ActorSpringRepositoryIT {
   @Test
   public void findByAddressStreetNameContainsReturnsAllContainingGivenStringShouldSort() {
 
+    List<Actor> actorList = actorRepository.findByAddress_StreetIgnoreCaseContaining("street",
+        Sort.by("name").ascending());
 
+    assertThat(actorList.size(), is(equalTo(7)));
+    assertThat(actorList.get(0).getName(), is(containsString("Carie-Ann Moss")));
 
   }
 

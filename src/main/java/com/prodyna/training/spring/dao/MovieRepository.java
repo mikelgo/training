@@ -16,14 +16,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
   /**
    * Task 1
+   * http://localhost:8080/api/movies/search/queryByGenre?genre=DRAMA
    * @param genre
    * @return
    */
   Set<Movie> queryByGenre(@Param("genre") Genre genre);
 
-
   /**
    * Task 2
+   * http://localhost:8080/api/movies/search/countAllByPrizes_Movie_Title?name=Matrix
    * @param name
    * @return
    */
@@ -35,6 +36,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
    * @param postCodes
    * @return
    */
+  List<Movie> findAllByDirector_AddressPostalCodeIn(@Param("postCodes") Set<Integer> postCodes);
 
   //JPQL Queries
 
@@ -45,6 +47,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
    * @param prizeText
    * @return
    */
+  @Query("select m from Movie m join Prize p on p.movie.id = m.id "
+      + " where p.name like :prizeText group by (m.id) "
+      + " having count(m) > 0 order by count(m) desc ")
+  List<Movie> getMoviesWithMostPrize(@Param("prizeText") String prizeText);
 
 
 
