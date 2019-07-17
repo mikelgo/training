@@ -20,6 +20,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TransactionRequiredException;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +40,13 @@ public class MovieRepositoryIT {
 
   @PersistenceContext
   private EntityManager entityManager;
+
+//  @Before
+//  public  void clearUp(){
+//
+//    entityManager.createNativeQuery("delete from movie").executeUpdate();
+//
+//  }
 
   public Long createMovieWithDirectorAndActWithActorsShouldUpdateDB() {
 
