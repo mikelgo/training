@@ -2,6 +2,7 @@ package com.prodyna.training.spring.integration;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.google.common.collect.Sets;
@@ -9,6 +10,7 @@ import com.prodyna.training.spring.domain.Act;
 import com.prodyna.training.spring.domain.Actor;
 import com.prodyna.training.spring.domain.Address;
 import com.prodyna.training.spring.domain.Biography;
+import com.prodyna.training.spring.domain.Car;
 import com.prodyna.training.spring.domain.Director;
 import com.prodyna.training.spring.domain.Genre;
 import com.prodyna.training.spring.domain.Movie;
@@ -41,10 +43,10 @@ public class MovieRepositoryIT {
 
     Movie myTestMovie = Movie.builder().title("MyTestMovie").genre(Genre.ACTION).build();
     Actor actor1 = Actor.builder().name("Actor 1")
-        // Implement Task 1.1
+        .car(Car.builder().brand("Test Brand").model("Test Model").build())
         .build();
     Actor actor2 = Actor.builder().name("Actor 2")
-        // Implement Task 1.2
+        .address(Address.builder().street("Test Street").build())
         .build();
     Actor actor3 = Actor.builder().name("Actor 3").build();
 
@@ -56,7 +58,7 @@ public class MovieRepositoryIT {
     entityManager.persist(actor3);
 
     //set biography after save since shares the same id as actor one-to-one shared key
-    // Implement Task 1.3
+    actor3.setBiography(Biography.builder().text("Test Biography").build());
 
     Act neo = new Act();
     neo.setActor(actor1);
@@ -91,15 +93,13 @@ public class MovieRepositoryIT {
 
   }
 
-  /**
-   * Must fail due to nullable = false
-   */
-  @Test
+  @Test(expected = PersistenceException.class)
   public void createMovieWithOutTitleShouldThrowException() {
 
-    //Implement here 3.Task
-    //Persist a Movie Entity without title
-    //assert that the right exception will be cached
+    Movie myTestMovie = Movie.builder().title(null)
+        .director(Director.builder().name("Director").build()).genre(Genre.ACTION).build();
+    entityManager.persist(myTestMovie);
+    entityManager.flush();
 
   }
 
@@ -140,7 +140,7 @@ public class MovieRepositoryIT {
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   @Test
-  public void persistMovieAndChildEntitites() {
+  public void persistMovieAndChildEntities() {
 
     int countBefore = getCountMovie();
     Long movieId = createMovieWithDirectorAndActWithActorsShouldUpdateDB();
@@ -150,9 +150,35 @@ public class MovieRepositoryIT {
 
     Movie movie = entityManager.find(Movie.class, movieId);
 
-    //Implement here 2. task
-    //Update  persistMovieAndChildEntitesTest method and assert (using hamcrest) following using Movie Entity object
+    //actor 1 has car bot not biography
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 1")).findFirst().get()
+            .getActor().getCar(),
+        is(not(equalTo(null))));
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 1")).findFirst().get()
+            .getActor().getBiography(),
+        is((equalTo(null))));
 
+    //actor 2 has no car but adress
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 2")).findFirst().get()
+            .getActor().getAddress(),
+        is(not(equalTo(null))));
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 2")).findFirst().get()
+            .getActor().getCar(),
+        is((equalTo(null))));
+
+    //actor 3 has no Adress but Biography
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 3")).findFirst().get()
+            .getActor().getBiography(),
+        is(not(equalTo(null))));
+    assertThat(
+        movie.getActs().stream().filter(act -> act.getRole().equals("Role 3")).findFirst().get()
+            .getActor().getAddress(),
+        is((equalTo(null))));
   }
 
 

@@ -22,45 +22,47 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@Entity
-@Table( name="person", uniqueConstraints = {
-        @UniqueConstraint(name = "uniqueCar", columnNames = {"car_id"})
+@Entity
+@Table(name = "person", uniqueConstraints = {
+    @UniqueConstraint(name = "uniqueCar", columnNames = {"car_id"})
 })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Person_type")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Person implements Serializable {
 
-    @Id
-    @SequenceGenerator(name = "PERSON_ID_GENERATOR", initialValue = 20, allocationSize = 10, sequenceName = "PERSON_SEQ")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
-            "PERSON_ID_GENERATOR")
-    private Long id;
+  @Id
+  @SequenceGenerator(name = "PERSON_ID_GENERATOR", initialValue = 20, allocationSize = 10, sequenceName = "PERSON_SEQ")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PERSON_ID_GENERATOR")
+  private Long id;
 
-    @Column
-    private String name;
+  @Column
+  private String name;
 
-    @JsonManagedReference
-    //Implement
-    private Car car;
+  @JsonManagedReference
+  @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @JoinColumn(name = "car_id", referencedColumnName = "id")
+  private Car car;
 
-    @JsonManagedReference
-    //Implement
-    private Biography biography;
+  @JsonManagedReference
+  @OneToOne(mappedBy = "person", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  private Biography biography;
 
-    @Embedded
-    Address address;
+  @Embedded
+  Address address;
 
-    public void setCar(Car car){
-        if(car != null){
-            this.car = car;
-            car.setPerson(this);
-        }
+  public void setCar(Car car) {
+    if (car != null) {
+      this.car = car;
+      car.setPerson(this);
     }
+  }
 
-  public void setBiography(Biography biography){
-    if(biography != null){
+  public void setBiography(Biography biography) {
+    if (biography != null) {
       this.biography = biography;
       biography.setPerson(this);
     }

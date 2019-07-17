@@ -14,27 +14,29 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @ToString
 @Builder
 public class Car implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @NaturalId
-    private String vin;
+  @NaturalId
+  private String vin;
 
-    private String brand;
+  private String brand;
 
-    private String model;
+  private String model;
 
-    //Implement
-    @JsonBackReference
-    @ToString.Exclude
-    private Person person;
+  @OneToOne(mappedBy = "car")
+  @JsonBackReference
+  @ToString.Exclude
+  private Person person;
 
 }

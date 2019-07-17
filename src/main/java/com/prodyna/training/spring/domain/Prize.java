@@ -21,21 +21,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
+@Entity
 public class Prize implements Serializable {
 
-    @Id
-    @SequenceGenerator(name = "PRIZE_ID_GENERATOR", initialValue = 20, allocationSize = 10, sequenceName = "PRIZE_SEQ")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
-            "PRIZE_ID_GENERATOR")
-    private Long id;
+  @Id
+  @SequenceGenerator(name = "PRIZE_ID_GENERATOR", initialValue = 20, allocationSize = 10, sequenceName = "PRIZE_SEQ")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRIZE_ID_GENERATOR")
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private Date date;
+  private Date date;
 
-    //Implement
-    @JsonIgnoreProperties("prizes")
-    private Movie movie;
+  @ManyToOne
+  @JoinColumn
+  @JsonIgnoreProperties("prizes")
+  private Movie movie;
 
 }

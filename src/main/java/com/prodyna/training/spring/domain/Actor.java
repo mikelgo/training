@@ -12,27 +12,27 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 @Table(name = "actor")
 @DiscriminatorValue("Actor")
-public class Actor extends Person{
+public class Actor extends Person {
 
-    @JsonIgnoreProperties("actor")
-    //Implement
-    private Set<Act> acts;
+  @JsonIgnoreProperties("actor")
+  @OneToMany(mappedBy = "actor")
+  private Set<Act> acts;
 
-    @Builder
-    public Actor(Long id, String name, Car car, Biography biography, Address address) {
-        super(id, name, car, biography, address);
-    }
+  @Builder
+  public Actor(Long id, String name, Car car, Biography biography, Address address) {
+    super(id, name, car, biography, address);
+  }
 
-    public Actor() {
-        super();
-    }
+  public Actor() {
+    super();
+  }
 
-    public void setActs(Set<Act> acts) {
-        this.acts = acts;
-        acts.forEach(act -> act.setActor(this));
-    }
+  public void setActs(Set<Act> acts) {
+    this.acts = acts;
+    acts.forEach(act -> act.setActor(this));
+  }
 
 }

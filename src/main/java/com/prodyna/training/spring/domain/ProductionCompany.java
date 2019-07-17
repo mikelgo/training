@@ -18,7 +18,7 @@ import org.hibernate.annotations.NaturalId;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
+@Entity
 @Table(name = "production_company")
 public class ProductionCompany implements Serializable {
 
@@ -30,7 +30,7 @@ public class ProductionCompany implements Serializable {
     private String name;
 
     @JsonIgnoreProperties("productionCompanies")
-    //Implement
+    @ManyToMany(mappedBy = "productionCompanies")
     private Set<Movie> movies;
 
 }
